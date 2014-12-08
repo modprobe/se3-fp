@@ -7,6 +7,27 @@
         Alexander Timmermann  6524072
         Christian Casar       6214251
 |#
+
+; Aufgabe 1
+#|
+  Da gefragt wurde, welcher Typ vorliegt, und nicht welcher _nicht_ vorliegt,
+  wird hier nur auf den jeweils zutreffenden Fall eingegangen.
+  kopfstueck:
+   linear rekursiv, da der rekursive Aufruf bei jeder Fallunterscheidung nur
+   ein Mal vorkommt
+  endstueck:
+   minimalrekursiv, da in der Verzweigung genau ein rekursiver Aufruf vorkommt.
+   endrekursiv, da der rekursive Aufruf der letzte Aufruf ist.
+   Minimalrekursivität impliziert eine lineare Rekursion (Definition s.o.)
+  merge:
+   baumrekursiv, da in einer Fallunterscheidung zwei rekursive Aufrufe statt-
+   finden
+  merge-sort:
+   geschachtelt rekursiv (Aufruf von merge)
+   baumrekursiv, Definition s.o.
+|#
+
+; Aufgabe 2
 (require 2htdp/image)
 
 ; Bildelemente
