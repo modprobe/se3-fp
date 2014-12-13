@@ -34,3 +34,8 @@
   ;(range-high n (car interval) (/ (- (cdr interval) (car interval)) n)))
 ;; test
 (range '(0 . 10) 5) ; -> '(0 2 4 6 8)
+
+; 2 Funktions-Plotter
+;; 2.1 Funktionen und Werte
+(define (function->points function interval n)
+  (map (lambda (x) (cons x (function x))) (range interval n)))
