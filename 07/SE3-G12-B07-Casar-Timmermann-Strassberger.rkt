@@ -1,0 +1,36 @@
+#lang racket
+
+#|
+    Abgabe Blatt 7
+    Gruppe:
+        Michael Strassberger  6527713
+        Alexander Timmermann  6524072
+        Christian Casar       6214251
+|#
+
+; 1 Generieren von Listen
+;; allgemein rekursiv
+(define (range-allg n acc step)
+  (if
+   (= n 0)
+   '()
+   (cons acc (range-allg (- n 1) (+ acc step) step))))
+
+;; endrekursiv
+(define (range-end output n acc step)
+  (if
+  (= n 0)
+  (reverse output)
+  (range-end (cons acc output)  (- n 1) (+ acc step) step)))
+
+;; mit Funktionen hoeherer Ordnung
+(define (range-high n start step)
+  (build-list n (lambda (x) (+ start (* step x)))))
+                                            
+
+(define (range interval n)
+  (range-allg n (car interval) (/ (- (cdr interval) (car interval)) n)))
+  ;(range-end '() n (car interval)  (/ (- (cdr interval) (car interval)) n)))
+  ;(range-high n (car interval) (/ (- (cdr interval) (car interval)) n)))
+;; test
+(range '(0 . 10) 5) ; -> '(0 2 4 6 8)
