@@ -60,11 +60,22 @@
   (map cons (rescale1d (map car pointlist) intx)
        (rescale1d (map cdr pointlist) inty)))
 
+;;; Test
+;;; (rescale2d '((0 . 0) (2 . 4) (4 . 16) (6 . 36) (8 . 64)) '(10 . 50) '(5 . 25))
+
 ;; 2.3 Grafische Darstellung 1
 (require 2htdp/image)
-(define background (empty-scene 800 600))
 (define (draw-points pointlist)
+  (let ([background (empty-scene 800 600)])
   (foldl (lambda (punkt bild)
            (place-image
-            (ellipse 3 3 "solid" "blue") (car punkt) (cdr punkt) bild)) ; 1x1 ist kaum zu erkennen
-         background pointlist))
+            (ellipse 5 5 "solid" "blue") (car punkt) (cdr punkt) bild)) ; 1x1 ist kaum zu erkennen
+         background pointlist)))
+
+;; 2.4 Grafische Darstellung 2
+;;; wir skalieren die ausgerechneten Punkte der Funktion auf 800x600 hoch, zeichnen das Bild und drehen es dann
+(define (plot-function f interval n)
+  (flip-vertical ; sonst steht die Funktion auf dem Kopf
+   (draw-points
+    (rescale2d
+     (function->points f interval n) '(0 . 800) '(0 . 600)))))
