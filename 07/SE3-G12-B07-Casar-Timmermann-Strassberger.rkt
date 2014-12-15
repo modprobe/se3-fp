@@ -39,7 +39,26 @@
 ;; 2.1 Funktionen und Werte
 (define (function->points function interval n)
   (map (lambda (x) (cons x (function x))) (range interval n)))
-(function->points sqr '(0 . 10) 5)
+
+;;; Test
+;;; (function->points sqr '(0 . 10) 5)
+
+;; 2.2 Wertebereich
+(define (rescale1d pointlist interval)
+  (let ([plistmin (apply min pointlist)]
+        [plistmax (apply max pointlist)]
+        [intmin (car interval)]
+        [intmax (cdr interval)]
+        )
+    (map (lambda (x) (+ intmin (* (/ (- x plistmin) (- plistmax plistmin)) (- intmax intmin)))) pointlist)))
+
+;;; Test
+;;; (rescale1d '(0 2 4 6 8) '(10 . 50))
+
+
+(define (rescale2d pointlist intx inty)
+  (map cons (rescale1d (map car pointlist) intx)
+       (rescale1d (map cdr pointlist) inty)))
 
 ;; 2.3 Grafische Darstellung 1
 (require 2htdp/image)
@@ -49,4 +68,3 @@
            (place-image
             (ellipse 3 3 "solid" "blue") (car punkt) (cdr punkt) bild)) ; 1x1 ist kaum zu erkennen
          background pointlist))
-; (draw-points (function->points sqr '(0 . 10) 5))
