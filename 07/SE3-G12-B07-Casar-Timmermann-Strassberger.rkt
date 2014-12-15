@@ -33,12 +33,12 @@
   ;(range-end '() n (car interval)  (/ (- (cdr interval) (car interval)) n)))
   (range-high n (car interval) (/ (- (cdr interval) (car interval)) n)))
 ;; test
-(range '(0 . 10) 5) ; -> '(0 2 4 6 8)
+;; (range '(0 . 10) 5) ; -> '(0 2 4 6 8)
 
 ; 2 Funktions-Plotter
 ;; 2.1 Funktionen und Werte
-(define (function->points function interval n)
-  (map (lambda (x) (cons x (function x))) (range interval n)))
+(define (function->points f interval n)
+  (map (lambda (x) (cons x (f x))) (range interval n)))
 
 ;;; Test
 ;;; (function->points sqr '(0 . 10) 5)
@@ -79,3 +79,22 @@
    (draw-points
     (rescale2d
      (function->points f interval n) '(0 . 800) '(0 . 600)))))
+
+;;; Test
+;;; (plot-function exp '(0 . 10) 300)
+
+;; 2.5 Oszillograph
+(require 2htdp/universe)
+
+(define (live-plot-function f interval n t)
+  (let* [(pointlist (rescale2d (function->points f interval n) '(0 . 800) '(0 . 600))) ; da wir die Liste der Punkte benötigen, können wir plot-function nicht direkt verwenden
+         (tpos (list-ref pointlist (modulo t n)))]
+    (place-image
+     (ellipse 10 10 "solid" "red") (car tpos) (- 600 (cdr tpos)) (plot-function f interval n))))
+
+(define (oszillograph function interval n)
+  (animate (curry live-plot-function function interval n)))
+
+;;; Test
+;;; (oszillograph exp '(0 . 10) 300)
+;;; (oszillograph sin (cons 0 (* 2 pi)) 300)
