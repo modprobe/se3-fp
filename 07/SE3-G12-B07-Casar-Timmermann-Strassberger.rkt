@@ -29,9 +29,9 @@
                                             
 
 (define (range interval n)
-  (range-allg n (car interval) (/ (- (cdr interval) (car interval)) n)))
+  ;(range-allg n (car interval) (/ (- (cdr interval) (car interval)) n)))
   ;(range-end '() n (car interval)  (/ (- (cdr interval) (car interval)) n)))
-  ;(range-high n (car interval) (/ (- (cdr interval) (car interval)) n)))
+  (range-high n (car interval) (/ (- (cdr interval) (car interval)) n)))
 ;; test
 (range '(0 . 10) 5) ; -> '(0 2 4 6 8)
 
@@ -39,3 +39,14 @@
 ;; 2.1 Funktionen und Werte
 (define (function->points function interval n)
   (map (lambda (x) (cons x (function x))) (range interval n)))
+(function->points sqr '(0 . 10) 5)
+
+;; 2.3 Grafische Darstellung 1
+(require 2htdp/image)
+(define background (empty-scene 800 600))
+(define (draw-points pointlist)
+  (foldl (lambda (punkt bild)
+           (place-image
+            (ellipse 3 3 "solid" "blue") (car punkt) (cdr punkt) bild)) ; 1x1 ist kaum zu erkennen
+         background pointlist))
+; (draw-points (function->points sqr '(0 . 10) 5))
