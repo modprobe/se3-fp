@@ -1,6 +1,5 @@
 #lang racket
-(require swindle/extra)
-(require se3-bib/setkarten-module)
+
 #|
     Abgabe Blatt 8
     Gruppe:
@@ -8,6 +7,9 @@
         Alexander Timmermann  6524072
         Christian Casar       6214251
 |#
+
+(require swindle/extra)
+(require se3-bib/setkarten-module)
 
 #| Aufgabe 1:
     1.1: Eine Funktion höherer Ordnung ist eine Funktion, die eine Funktion als 
@@ -49,8 +51,27 @@
                   alle Elemente erst mit 1.8 multipliziert und dann zu 33 addiert.
 |#
 
-;3 Spieltheorie: Das Kartenspiel SET!
-;3.1 Spielkartenauspraegung, Repraesentation
+; Aufgabe 2
+; NB: In der Aufgabe wird ausdrücklich von "Ausdrücken" gesprochen, deshalb haben
+;     wir keine Funktionen definiert. Man kann zum Testen dann einfach den ent-
+;     sprechenden Ausdruck auskommentieren.
+;; Testliste:
+(define xs '(12 29 -30 15 7 2 -400 36))
+
+;; 1. Absolutwerte
+; (map abs xs)
+
+;; 2. durch 3 teilbar
+; (filter (compose zero? (curryr modulo 3)) xs)
+
+;; 3. Summe aller geraden Zahlen über 10
+; (foldl + 0 (filter (curry < 10) (filter even? xs)))
+
+;; 4. Aufteilen anhand eines Prädikats. Als Beispiel: odd?
+; (partition odd? xs)
+
+; 3 Spieltheorie: Das Kartenspiel SET!
+; 3.1 Spielkartenauspraegung, Repraesentation
 ;; Es wuerde sich anbieten die Kartenelement (Zahl, Muster...) als einzelne
 ;; Listen darzustellen, da zur Generierung aller Karten aber amb verwendet wird
 ;; und amb nur wie erwuenscht arbeitet, wenn die zu betrachtenden Werte als einzelne 
@@ -77,13 +98,13 @@
   (apply show-set-card karte))
 
 
-;3.3 SET-Bestimmung
-; Hilfsfunktion, die alle Listenelemente auf Gleichheit prueft
+; 3.3 SET-Bestimmung
+;; Hilfsfunktion, die alle Listenelemente auf Gleichheit prueft
 (define (all-elem-equal? liste)
   (andmap (lambda (x) 
             (equal? x (car liste)))
           liste))
-; Hilfsfunktion, die prueft, ob alle Elemente einzigartig sind
+;; Hilfsfunktion, die prueft, ob alle Elemente einzigartig sind
 (define (all-elem-unique? liste)
   (andmap (lambda (x) 
             (not (equal? x (car liste))))
@@ -108,12 +129,9 @@
           [else #f])))
 
 
-(define t-test '((2 red oval hatched) (2 red oval hatched) (2 red oval hatched)))
-(define f-test '((2  red rectangle outline) (2  green rectangle outline) (1  green rectangle solid)))
+;; Tests:
+;;; (define t-test '((2 red oval hatched) (2 red oval hatched) (2 red oval hatched)))
+;;; (define f-test '((2  red rectangle outline) (2  green rectangle outline) (1  green rectangle solid)))
 
-(is-a-set? t-test)
-(is-a-set? f-test)
-
-
-
-
+;;; (is-a-set? t-test)
+;;; (is-a-set? f-test)
