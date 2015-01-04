@@ -9,6 +9,46 @@
         Christian Casar       6214251
 |#
 
+#| Aufgabe 1:
+    1.1: Eine Funktion höherer Ordnung ist eine Funktion, die eine Funktion als 
+    ==== Argument erhält und/oder eine Funktion als Rückgabewert ausgibt.
+
+    1.2: * foldl: ja, nimmt eine Funktion als erstes Argument entgegen
+    ==== * kopf-oder-schwanz: nein, keine Funktion als Argument oder Rückgabe
+         * pimento: ja, Funktion als erstes Argument
+         * my-tan: nein, keine Funktion als Argument oder Rückgabe
+
+    1.3: Der Rückgabewert von (pimento * 5) ist eine anonyme Funktion, bei der
+    ==== f an die *-Funktion und arg1 an 5 gebunden ist. Beim Aufruf von
+         ((pimento * 5) 7) wird für die anonyme Funktion in der lokalen Umgebung
+         arg2 an den Wert 7 gebunden. Es wird logischerweise 35 zurückgegeben.
+
+    1.4: 1. (foldl (curry * 2) 1 '(1 1 2 3))
+    ====      --> 96. foldl "faltet" die Liste mit der gegebenen Funktion von
+                  links nach rechts auf. Dabei wird als Funktion hier eine ge-
+                  curriete Version der Multiplikation benutzt. Die Werte werden
+                  also erst verdoppelt und dann mit dem Rest multipliziert.
+
+         2. (map cons '(1 2 3 4) '(1 2 3 4))
+              --> '((1 . 1) (2 . 2) (3 . 3) (4 . 4)). map bildet die zwei Listen
+                  unter Zuhilfenahme der Funktion im 1. Argument, also der cons-
+                  Funktion, auf eine neue Liste ab, woraus die Liste aus Paaren
+                  entsteht.
+
+         3. (filter pair? '((a b ) () 1 (())))
+              --> '((a b) (())). filter benutzt die gegebene Funktion und durch-
+                  sucht die Liste. (a b) und (()) gelten als Paare. Die Elemente,
+                  für die die Funktion #t zurückgibt, werden als neue Liste zurück-
+                  gegeben.
+
+         4. (map (compose (curry + 33) (curry * 1.8)) '(5505 100 0 1 1000 -273.15))
+              --> '(9942.0 213.0 33 34.8 1833.0 -458.66999999999996). map bildet
+                  immer noch eine Liste auf eine andere Liste ab. Hier wird die
+                  Funktion aus zwei gecurrieten Funktionen zusammengesetzt. compose
+                  wendet die Funktionen in umgekehrter Reihenfolge an, daher werden
+                  alle Elemente erst mit 1.8 multipliziert und dann zu 33 addiert.
+|#
+
 ;3 Spieltheorie: Das Kartenspiel SET!
 ;3.1 Spielkartenauspraegung, Repraesentation
 ;; Es wuerde sich anbieten die Kartenelement (Zahl, Muster...) als einzelne
