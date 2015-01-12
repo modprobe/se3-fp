@@ -11,9 +11,12 @@
 (require swindle/setf)
 
 ;  1 CLOS und generische Funktionen
+
 ;; 1.1 Definition von Klassen
+;; ==========================
 ;; Klassen entsprechend der Beschreibung vom Aufgabenzettel. Als Typ immer Strings
 ;; gefordert, um die cite-Methode zu vereinfachen.
+
 (defclass* veroeffentlichung () 
   (autoren
    :reader autoren
@@ -124,6 +127,7 @@
       :bnr "3")) 
 
 ;; 1.2 Generische Funktionen und Methoden
+;; ======================================
 ;; Implementierung orientiert sich sehr stark an den gegebenen Beispielen. Da
 ;; teilweise nicht fuer alle slots Informationen gegeben sind bzw. keine genauere
 ;; Stuktur fuer den allgemeinen Zitataufbau angegben ist.
@@ -158,28 +162,29 @@
 (cite Prefect1979)
 (cite Wells3200)
 
-;1.3 Ergaenzungsmehtoden
+;1.3 Ergaenzungsmethoden
 #|
-Ergaenzungsmethoden sind eine Alternative zu super-calls bei der Vererbung von Methoden. Es werden Methoden bereit gestellt,
-die den Aufruf der aus der Oberklasse geerbten Methoden um spezifischere Funktionalitaet ergaenzen.
-CLOS bietet hier :before, :after und :around, die entsprechend ihrer Namen entweder vor, nach oder sowohl vor als auch nach
-Aufruf der geerbten Methode klassenspezifische Ergaenzungen ausfuehren.
-Vorteile fuer diese Alternative sind, dass die geerbte Methode nicht ueberladen werden muss, sondern einfach nur an den 
-entsprechenden Stellen ergaenzt wird. Ausserdem koennen die Ergaenzungen sicherstellen, dass die geerbten Methoden korrekt
-ausgefuehrt werden, indem etwaige klassenspezifische Aenderungen am Objekt beachtet werden.
-
-In diesem Programm koennten die Ergaenzungsmethoden benutzt werden, um fuer die veroeffentlichungs
-Klasse eine allgemeine cite-Methode zu implementieren. Diese Methode die allgemeinen Klasseninformationen ausgeben
-zu lassen und spaeter von den spezifischeren Klasen mithilfe von :after ihre spezifischeren
-Informationen anhaengen zu lassen. Damit dies korrekt funktioniert, muesste aber der Aufbau des Literaturangabe so angepasst
-werden, dass die einzelnen Angaben von unspezifisch nach spezifisch aufeinander folgen.
+    Ergaenzungsmethoden sind eine Alternative zu super-calls bei der Vererbung von Methoden. Es werden Methoden bereit gestellt,
+    die den Aufruf der aus der Oberklasse geerbten Methoden um spezifischere Funktionalitaet ergaenzen.
+    CLOS bietet hier :before, :after und :around, die entsprechend ihrer Namen entweder vor, nach oder sowohl vor als auch nach
+    Aufruf der geerbten Methode klassenspezifische Ergaenzungen ausfuehren.
+    Vorteile fuer diese Alternative sind, dass die geerbte Methode nicht ueberladen werden muss, sondern einfach nur an den 
+    entsprechenden Stellen ergaenzt wird. Ausserdem koennen die Ergaenzungen sicherstellen, dass die geerbten Methoden korrekt
+    ausgefuehrt werden, indem etwaige klassenspezifische Aenderungen am Objekt beachtet werden.
+    
+    In diesem Programm koennten die Ergaenzungsmethoden benutzt werden, um fuer die veroeffentlichungs
+    Klasse eine allgemeine cite-Methode zu implementieren. Diese Methode die allgemeinen Klasseninformationen ausgeben
+    zu lassen und spaeter von den spezifischeren Klasen mithilfe von :after ihre spezifischeren
+    Informationen anhaengen zu lassen. Damit dies korrekt funktioniert, muesste aber der Aufbau des Literaturangabe so angepasst
+    werden, dass die einzelnen Angaben von unspezifisch nach spezifisch aufeinander folgen.
 |#
 
 ;  2 CLOS und Vererbung
 
 ;; Generische Methoden als Accessors
 ;; =================================
-;; dass man nur eine Methode implementieren musste, habe ich erst gelesen, als ich fertig war…
+;; dass man nur eine Methode implementieren musste, haben wir erst gelesen, als 
+;; wir fertig waren…
 
 ;;; Ein Amphibienfahrzeug kann sich in mehreren Medien bewegen. Diese sollten also
 ;;; als Liste zurückgegeben werden.
@@ -187,7 +192,7 @@ werden, dass die einzelnen Angaben von unspezifisch nach spezifisch aufeinander 
     :combination generic-list-combination)
 
 ;;; Logischerweise kann ein Fahrzeug nicht in allen Medien die gleiche Maximal-
-;;; geschwindigkeit haben (bspw. der Zeitzug). Wenn also in einem Medium eine
+;;; geschwindigkeit haben (bspw. das Amphibienflugzeug). Wenn also in einem Medium eine
 ;;; niedrigere Maximalgeschwindigkeit gilt, limitiert das logischerweise die
 ;;; komplette Maximalgeschwindigkeit.
 (defgeneric max-velocity ((fahrzeug))
@@ -284,6 +289,8 @@ werden, dass die einzelnen Angaben von unspezifisch nach spezifisch aufeinander 
 
 ;; Beispielobjekte
 ;; ===============
+;; Die Zahlen sind teils sehr umständlich ausgerechnet, teils aus der Wikipedia
+;; und teils auch einfach ausgedacht ;)
 
 ;;; Ein Terrapin Mk. 1 der British Army aus dem 2. Weltkrieg
 (define terrapin-mark1
