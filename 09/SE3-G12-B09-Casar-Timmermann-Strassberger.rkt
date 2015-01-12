@@ -179,6 +179,7 @@ werden, dass die einzelnen Angaben von unspezifisch nach spezifisch aufeinander 
 
 ;; Generische Methoden als Accessors
 ;; =================================
+;; dass man nur eine Methode implementieren musste, habe ich erst gelesen, als ich fertig war…
 
 ;;; Ein Amphibienfahrzeug kann sich in mehreren Medien bewegen. Diese sollten also
 ;;; als Liste zurückgegeben werden.
@@ -213,7 +214,10 @@ werden, dass die einzelnen Angaben von unspezifisch nach spezifisch aufeinander 
 
 (defclass* fahrzeug ())
 
-(defclass* landfahrzeug (fahrzeug))
+(defclass* landfahrzeug (fahrzeug)
+    (medium_land            :initvalue 'Land
+                            :accessor medium)
+)
 
 (defclass* wasserfahrzeug (fahrzeug)
     (medium_wasser          :initvalue 'Wasser
@@ -324,10 +328,41 @@ werden, dass die einzelnen Angaben von unspezifisch nach spezifisch aufeinander 
 
 ;; Beispielaufrufe
 ;; ===============
-;
+
 ;(max-load terrapin-mark1)
 ;(medium superscooper
 ;(consumption julesVerneTrain)
 ;(medium the200Bus)
 ;(max-passengers the200Bus)
 ;(max-load ariesHyrailLandcruiser)
+
+;; Erklärung
+;; =========
+#|
+    Die Klassenpräzedenzliste gibt bei Vererbungen eine Art Reihenfolge an,
+    welche Klasse eine Andere spezifiziert. So kann bei Konflikten in der Ver-
+    erbung (z.B. bei gleichen Methodennamen) eine Ordnung vorgegeben werden und
+    die richtige Methode aufgerufen werden.
+
+    Die generischen Methoden, die wir hier geschrieben haben, machen sich diese
+    Klassenpräzedenzliste zunutze, indem sie die Methode für _alle_ Klassen in
+    der Liste in der korrekten, in der KPL vorgegeben Reihenfolge aufrufen und die 
+    Ergebnisse anhand einer vorgegebenen Ordnung verarbeiten. Als Beispiel kann 
+    hier folgender Aufruf von (medium) dienen:
+
+        => (medium superscooper)
+        '(Strasse Land Wasser Luft)
+
+    Wie man aus der Signatur von "amphibienflugzeug" erkennen kann, erbt die Klasse
+    von "strassenfahrzeug", "wasserfahrzeug" und "luftfahrzeug". Es wird also erst
+    die "medium"-Funktion des Straßenfahrzeugs aufgerufen, was das erste Element der
+    Liste erklärt. Danach wird jedoch die "medium"-Funktion der Oberklasse aufgerufen,
+    in diesem Fall "landfahrzeug". So kommt das zweite Element der Liste zustande.
+    Die Ergebnisse werden in eine Liste zusammengefasst, weil wir einen "eingebauten"
+    Kombinator benutzen.
+
+    Die restlichen generischen Methoden arbeiten analog, mit dem Unterschied dass
+    eine andere Kombinationsfunktion gewählt wurde. Da von den numerischen Werten
+    immer ein Minimum bzw. Maximum bestimmt werden kann, benutzen wir die ent-
+    sprechende Kombinationsfunktion dort.
+|#
