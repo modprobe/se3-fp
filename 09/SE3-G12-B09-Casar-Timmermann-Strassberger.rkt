@@ -10,7 +10,7 @@
 (require swindle/misc)
 (require swindle/setf)
 
-;1 CLOS und generische Funktionen
+;  1 CLOS und generische Funktionen
 ;; 1.1 Definition von Klassen
 ;; Klassen entsprechend der Beschreibung vom Aufgabenzettel. Als Typ immer Strings
 ;; gefordert, um die cite-Methode zu vereinfachen.
@@ -60,7 +60,7 @@
    :initarg :snr
    :type <string>))
 
-(defclass* sammelband ( buch veroeffentlichung)
+(defclass* sammelband (buch veroeffentlichung)
    (herausgeber
    :reader herausgeber
    :initarg :hgb
@@ -122,7 +122,8 @@
       :zt "Heimwerkerpraxis für Anfänger"
       :hnr "550"
       :bnr "3")) 
-;1.2 Generische Funktionen und Methoden
+
+;; 1.2 Generische Funktionen und Methoden
 ;; Implementierung orientiert sich sehr stark an den gegebenen Beispielen. Da
 ;; teilweise nicht fuer alle slots Informationen gegeben sind bzw. keine genauere
 ;; Stuktur fuer den allgemeinen Zitataufbau angegben ist.
@@ -173,3 +174,46 @@ zu lassen und spaeter von den spezifischeren Klasen mithilfe von :after ihre spe
 Informationen anhaengen zu lassen. Damit dies korrekt funktioniert, muesste aber der Aufbau des Literaturangabe so angepasst
 werden, dass die einzelnen Angaben von unspezifisch nach spezifisch aufeinander folgen.
 |#
+
+;  2 CLOS und Vererbung
+;; 2.1 Definition von Klassen
+
+(defclass* fahrzeug ()
+
+)
+
+(defclass* landfahrzeug (fahrzeug)
+
+)
+
+(defclass* wasserfahrzeug (fahrzeug)
+
+)
+
+(defclass* luftfahrzeug (fahrzeug)
+
+)
+
+(defclass* schienenfahrzeug (landfahrzeug)
+
+)
+
+(defclass* strassenfahrzeug (landfahrzeug)
+
+)
+
+(defclass* amphibienfahrzeug (landfahrzeug wasserfahrzeug)
+
+)
+
+(defclass* amphibienflugzeug (landfahrzeug wasserfahrzeug luftfahrzeug)
+
+)
+
+(defclass* zweiwegefahrzeug (schienenfahrzeug strassenfahrzeug)
+
+)
+
+(defclass* zeitzug (schienenfahrzeug luftfahrzeug)
+
+)
