@@ -176,44 +176,158 @@ werden, dass die einzelnen Angaben von unspezifisch nach spezifisch aufeinander 
 |#
 
 ;  2 CLOS und Vererbung
-;; 2.1 Definition von Klassen
 
-(defclass* fahrzeug ()
+;; Generische Methoden als Accessors
+;; =================================
 
-)
+;;; Ein Amphibienfahrzeug kann sich in mehreren Medien bewegen. Diese sollten also
+;;; als Liste zurückgegeben werden.
+(defgeneric medium ((fahrzeug))
+    :combination generic-list-combination)
 
-(defclass* landfahrzeug (fahrzeug)
+;;; Logischerweise kann ein Fahrzeug nicht in allen Medien die gleiche Maximal-
+;;; geschwindigkeit haben (bspw. der Zeitzug). Wenn also in einem Medium eine
+;;; niedrigere Maximalgeschwindigkeit gilt, limitiert das logischerweise die
+;;; komplette Maximalgeschwindigkeit.
+(defgeneric max-velocity ((fahrzeug))
+    :combination generic-min-combination)
 
-)
+
+;;; siehe max-velocity. Das gleiche Prinzip gilt hier.
+(defgeneric max-load ((fahrzeug))
+    :combination generic-min-combination)
+
+;;; Näher an der Realität wäre vermutlich ein Mittelwert, darauf wird aber aus
+;;; Gründen der Komplexität verzichtet.
+(defgeneric consumption ((fahrzeug))
+    :combination generic-max-combination)
+
+
+;;; Auch hier nimmt man aus Gründen der Fahrgastsicherheit™ lieber den kleineren
+;;; Wert.
+(defgeneric max-passengers ((fahrzeug))
+    :combination generic-min-combination)
+
+;; Klassendefinitionen
+;; ===================
+
+(defclass* fahrzeug ())
+
+(defclass* landfahrzeug (fahrzeug))
 
 (defclass* wasserfahrzeug (fahrzeug)
-
+    (medium_wasser          :initvalue 'Wasser
+                            :accessor medium)
+    (max-velocity_wasser    :reader max-velocity
+                            :initarg :max-velocity_water)
+    (max-load_wasser        :reader max-load
+                            :initarg :max-load_water)
+    (consumption_wasser     :reader consumption
+                            :initarg :consumption_water)
+    (max-passengers_wasser  :reader max-passengers
+                            :initarg :max-passengers_water)
 )
 
 (defclass* luftfahrzeug (fahrzeug)
-
+    (medium_luft          :initvalue 'Luft
+                          :accessor medium)
+    (max-velocity_luft    :reader max-velocity
+                          :initarg :max-velocity_air)
+    (max-load_luft        :reader max-load
+                          :initarg :max-load_air)
+    (consumption_luft     :reader consumption
+                          :initarg :consumption_air)
+    (max-passengers_luft  :reader max-passengers
+                          :initarg :max-passengers_air)
 )
 
 (defclass* schienenfahrzeug (landfahrzeug)
-
+    (medium_schiene          :initvalue 'Schiene
+                             :accessor medium)
+    (max-velocity_schiene    :reader max-velocity
+                             :initarg :max-velocity_rail)
+    (max-load_schiene        :reader max-load
+                             :initarg :max-load_rail)
+    (consumption_schiene     :reader consumption
+                             :initarg :consumption_rail)
+    (max-passengers_schiene  :reader max-passengers
+                             :initarg :max-passengers_rail)
 )
 
 (defclass* strassenfahrzeug (landfahrzeug)
-
+    (medium_strasse          :initvalue 'Strasse
+                             :accessor medium)
+    (max-velocity_strasse    :reader max-velocity
+                             :initarg :max-velocity_road)
+    (max-load_strasse        :reader max-load
+                             :initarg :max-load_road)
+    (consumption_strasse     :reader consumption
+                             :initarg :consumption_road)
+    (max-passengers_strasse  :reader max-passengers
+                             :initarg :max-passengers_road)
 )
 
-(defclass* amphibienfahrzeug (landfahrzeug wasserfahrzeug)
+(defclass* amphibienfahrzeug (strassenfahrzeug wasserfahrzeug))
 
-)
+(defclass* amphibienflugzeug (strassenfahrzeug wasserfahrzeug luftfahrzeug))
 
-(defclass* amphibienflugzeug (landfahrzeug wasserfahrzeug luftfahrzeug)
+(defclass* zweiwegefahrzeug (schienenfahrzeug strassenfahrzeug))
 
-)
+(defclass* zeitzug (schienenfahrzeug luftfahrzeug))
 
-(defclass* zweiwegefahrzeug (schienenfahrzeug strassenfahrzeug)
+;;; einfach nur der Vollständigkeit halber…
+(defclass* aeromobil (strassenfahrzeug luftfahrzeug))
 
-)
+;; Beispielobjekte
+;; ===============
 
-(defclass* zeitzug (schienenfahrzeug luftfahrzeug)
+;;; Ein Terrapin Mk. 1 der British Army aus dem 2. Weltkrieg
+(define terrapin-mark1
+  (make amphibienfahrzeug
+        :max-velocity_road 24 :max-velocity_water 8
+        :max-load_road 4000 :max-load_water 4000
+        :consumption_road 20 :consumption_water 20
+        :max-passengers_road 2 :max-passengers_water 2))
 
-)
+;;; Ein Bombardier 415 'Superscooper', ein Amphibienflugzeug das als Lösch-
+;;; flugzeug genutzt wird.
+(define superscooper
+  (make amphibienflugzeug
+        :max-velocity_air 359 :max-velocity_road 150 :max-velocity_water 130
+        :max-load_air 3000 :max-load_road 3000 :max-load_water 2900
+        :consumption_air 2.375 :consumption_road 2.8 :consumption_water 2.6
+        :max-passengers_air 2 :max-passengers_road 2 :max-passengers_water 2))
+
+;;; Ein konvertierter Toyota Land Cruiser von Aries Rail aus Wangara, WA, Australia.
+(define ariesHyrailLandcruiser
+  (make zweiwegefahrzeug
+        :max-velocity_rail 140 :max-velocity_road 180
+        :max-load_rail 200 :max-load_road 300
+        :consumption_rail 10 :consumption_road 8
+        :max-passengers_rail 5 :max-passengers_road 5))
+
+;;; The one and only.
+(define julesVerneTrain
+  (make zeitzug
+        :max-velocity_rail 140 :max-velocity_air 180
+        :max-load_rail 9999 :max-load_air 8888
+        :consumption_rail 1.21 :consumption_air 1.21 ; in Gigawatts
+        :max-passengers_rail 11 :max-passengers_air 11))
+
+;;; Der 200-Bus aus Doctor Who (4x15 'Planet of the Dead')
+(define the200Bus
+  (make aeromobil
+        :max-velocity_road 80 :max-velocity_air 200
+        :max-load_road 1000 :max-load_air 200
+        :consumption_road 20 :consumption_air 0
+        :max-passengers_road 80 :max-passengers_air 6))
+
+;; Beispielaufrufe
+;; ===============
+;
+;(max-load terrapin-mark1)
+;(medium superscooper
+;(consumption julesVerneTrain)
+;(medium the200Bus)
+;(max-passengers the200Bus)
+;(max-load ariesHyrailLandcruiser)
